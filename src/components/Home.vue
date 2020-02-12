@@ -20,36 +20,16 @@
         <el-menu background-color="#333744"
                  text-color="#fff"
                  active-text-color="#409EFF"
-                 unique-opened
                  :collapse="isCollapse"
                  :collapse-transition="false"
-                 router
-                 :default-active="activePath">
-          <!-- 一级菜单 -->
-          <el-submenu :index="item.id + ''"
-                      v-for="item in menulist"
-                      :key="item.id">
-            <!-- 一级菜单的模板区域 -->
-            <template slot="title">
-              <!-- 图标 -->
-              <!-- <i :class="iconsObj[item.id]"></i> -->
-              <!-- 文本 -->
-              <span>{{item.authName}}</span>
-            </template>
-
-            <!-- 二级菜单 -->
-            <el-menu-item :index="'/' + subItem.path"
-                          v-for="subItem in item.children"
-                          :key="subItem.id"
-                          @click="saveNavState('/' + subItem.path)">
-              <template slot="title">
-                <!-- 图标 -->
-                <i class="el-icon-menu"></i>
-                <!-- 文本 -->
-                <span>{{subItem.authName}}</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>
+                 router>
+          <!-- 菜单 -->
+          <el-menu-item :index="'/'+item.description"
+                        v-for="item in menulist"
+                        :key="item.id">
+            <i :class="iconsObj[item.code]"></i>
+            <span>{{item.name}}</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <!-- 右侧内容主体 -->
@@ -67,22 +47,19 @@ export default {
     return {
       // 左侧菜单数据
       menulist: [],
-      // iconsObj: {
-      //   '125': 'iconfont icon-user',
-      //   '103': 'iconfont icon-tijikongjian',
-      //   '101': 'iconfont icon-shangpin',
-      //   '102': 'iconfont icon-danju',
-      //   '145': 'iconfont icon-baobiao'
-      // },
+      iconsObj: {
+        '001': 'iconfont icon-showpassword',
+        '002': 'iconfont icon-tijikongjian',
+        '003': 'iconfont icon-users',
+        '004': 'iconfont icon-danju',
+        '005': 'iconfont icon-user'
+      },
       // 是否折叠
-      isCollapse: false,
-      // 被激活的链接地址
-      activePath: ''
+      isCollapse: false
     }
   },
   created() {
     this.getMenuList()
-    this.activePath = window.sessionStorage.getItem('activePath')
   },
   methods: {
     logout() {
@@ -91,19 +68,13 @@ export default {
     },
     // 获取所有的菜单
     async getMenuList() {
-      const { data: res } = await this.$http.post('sys/profile')
-      if (res.meta.status !== 10000) return this.$message.error(res.message)
-      // this.menulist = res.data
-      console.log(res)
+      const { data: res } = await this.$http.post('http://127.0.0.1:9002/sys/profile')
+      if (res.code !== 10000) return this.$message.error(res.message)
+      this.menulist = res.data.roles.menus
     },
     // 点击按钮，切换菜单的折叠与展开
     toggleCollapse() {
       this.isCollapse = !this.isCollapse
-    },
-    // 保存链接的激活状态
-    saveNavState(activePath) {
-      window.sessionStorage.setItem('activePath', activePath)
-      this.activePath = activePath
     }
   }
 }

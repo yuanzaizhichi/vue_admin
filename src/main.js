@@ -14,7 +14,7 @@ import './assets/fonts/iconfont.css'
 
 import axios from 'axios'
 // 配置请求的跟路径
-axios.defaults.baseURL = 'http://127.0.0.1:9002/'
+// axios.defaults.baseURL = 'http://127.0.0.1'
 axios.interceptors.request.use(config => {
   // console.log(config)
   config.headers.Authorization = 'Bearer ' + window.sessionStorage.getItem('token')

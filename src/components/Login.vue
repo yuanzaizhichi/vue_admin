@@ -1,38 +1,38 @@
 <template>
-    <div class="login_container">
-        <div class="login_box">
-            <!-- 头像区域 -->
-            <div class="avatar_box">
-                <img src="../assets/logo.png"
-                     alt="">
-            </div>
-            <!-- 登录表单区域 -->
-            <el-form ref="loginFormRef"
-                     :model="loginForm"
-                     :rules="loginFormRules"
-                     label-width="0px"
-                     class="login_form">
-                <!-- 用户名 -->
-                <el-form-item prop="mobile">
-                    <el-input v-model="loginForm.mobile"
-                              prefix-icon="iconfont icon-user"></el-input>
-                </el-form-item>
-                <!-- 密码 -->
-                <el-form-item prop="password">
-                    <el-input v-model="loginForm.password"
-                              prefix-icon="iconfont icon-3702mima"
-                              type="password"></el-input>
-                </el-form-item>
-                <!-- 按钮区域 -->
-                <el-form-item class="btns">
-                    <el-button type="primary"
-                               @click="login">登录</el-button>
-                    <el-button type="info"
-                               @click="resetLoginForm">重置</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+  <div class="login_container">
+    <div class="login_box">
+      <!-- 头像区域 -->
+      <div class="avatar_box">
+        <img src="../assets/logo.png"
+             alt="">
+      </div>
+      <!-- 登录表单区域 -->
+      <el-form ref="loginFormRef"
+               :model="loginForm"
+               :rules="loginFormRules"
+               label-width="0px"
+               class="login_form">
+        <!-- 用户名 -->
+        <el-form-item prop="mobile">
+          <el-input v-model="loginForm.mobile"
+                    prefix-icon="iconfont icon-user"></el-input>
+        </el-form-item>
+        <!-- 密码 -->
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password"
+                    prefix-icon="iconfont icon-3702mima"
+                    type="password"></el-input>
+        </el-form-item>
+        <!-- 按钮区域 -->
+        <el-form-item class="btns">
+          <el-button type="primary"
+                     @click="login">登录</el-button>
+          <el-button type="info"
+                     @click="resetLoginForm">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
+  </div>
 </template>
 
 <script>
@@ -68,7 +68,7 @@ export default {
     login () {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
-        const { data: res } = await this.$http.post('sys/login', this.loginForm)
+        const { data: res } = await this.$http.post('http://127.0.0.1:9002/sys/login', this.loginForm)
         if (res.code !== 10000) return this.$message.error(res.message)
         this.$message.success('登录成功')
         // 1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中
