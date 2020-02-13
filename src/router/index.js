@@ -4,6 +4,7 @@ import Home from '../components/Home'
 import Login from '../components/Login'
 import Welcome from '../components/Welcome'
 import Department from '../components/department/Department'
+import Admin from '../components/admin/Admin'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,10 @@ const routes = [
       {
         path: '/department',
         component: Department
+      },
+      {
+        path: '/admin',
+        component: Admin
       }
     ]
   }
