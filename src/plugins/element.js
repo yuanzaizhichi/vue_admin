@@ -20,7 +20,9 @@ import {
     Col,
     MessageBox,
     Breadcrumb,
-    BreadcrumbItem
+    BreadcrumbItem,
+    Pagination,
+    Switch
 } from 'element-ui'
 
 Vue.use(Button)
@@ -42,6 +44,8 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
+Vue.use(Pagination)
+Vue.use(Switch)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

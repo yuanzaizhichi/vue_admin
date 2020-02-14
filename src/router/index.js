@@ -5,6 +5,9 @@ import Login from '../components/Login'
 import Welcome from '../components/Welcome'
 import Department from '../components/department/Department'
 import Admin from '../components/admin/Admin'
+import Users from '../components/user/Users'
+import Params from '../components/param/Params'
+import Roles from '../components/roles/Roles'
 
 Vue.use(VueRouter)
 
@@ -33,6 +36,18 @@ const routes = [
       {
         path: '/admin',
         component: Admin
+      },
+      {
+        path: '/users',
+        component: Users
+      },
+      {
+        path: '/params',
+        component: Params
+      },
+      {
+        path: '/roles',
+        component: Roles
       }
     ]
   }
