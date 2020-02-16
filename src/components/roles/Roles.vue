@@ -10,7 +10,6 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="8">
-
         </el-col>
         <el-col :span="4">
           <el-button type="primary"
@@ -37,7 +36,7 @@
                        @click="removeRoleById(scope.row.id)">删除</el-button>
             <el-button type="text"
                        size="small"
-                       @click="showSetRightDialog(scope.row)">分配权限</el-button>
+                       @click="handlerPerm(scope.row)">分配权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -107,14 +106,39 @@
                      @click="editRoleInfo(editForm.id)">确 定</el-button>
         </span>
       </el-dialog>
+
+      <el-dialog :title="'为【'+formData.name+'】分配权限'"
+                 :visible.sync="permFormVisible"
+                 style="hight:100px;line-height:1px">
+        <el-tree :data="treeData"
+                 default-expand-all
+                 show-checkbox
+                 node-key="id"
+                 ref="tree"
+                 :check-strictly="true"
+                 :default-checked-keys="checkNodes"
+                 :props="{label:'name'}">
+        </el-tree>
+        <div slot="footer"
+             class="dialog-footer">
+          <el-button @click="permFormVisible = false">取 消</el-button>
+          <el-button type="primary"
+                     @click="assignPrem">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script>
+import Utils from '../../utils'
 export default {
   data () {
     return {
+      formData: {},
+      treeData: [],
+      checkNodes: [],
+      permFormVisible: false,
       // 角色列表
       rolesList: [],
       page: 1,
@@ -142,12 +166,38 @@ export default {
     this.getRolesList()
   },
   methods: {
+    async assignPrem () {
+      console.log(this.formData.id)
+      console.log(this.$refs.tree.getCheckedKeys())
+      const { data: res } = await this.$http.put('http://127.0.0.1:9002/sys/role/assignPrem', {
+        id: this.formData.id,
+        permIds: this.$refs.tree.getCheckedKeys()
+      }
+      )
+      if (res.code !== 10000) return this.$message.error(res.message)
+      this.$message.success(res.message)
+      this.permFormVisible = false
+    },
+    async handlerPerm (obj) {
+      const { data: res } = await this.$http.get('http://127.0.0.1:9002/sys/role/' + obj.id)
+      console.log(res)
+      this.formData = res.data
+      this.checkNodes = res.data.permIds
+      const { data: res2 } = await this.$http.get(
+        'http://127.0.0.1:9002/sys/permission',
+        { params: { type: 0, pid: null, enVisible: 1 } }
+      )
+      if (res2.code !== 10000) return this.$message.error(res2.message)
+      this.treeData = Utils.transformTozTreeFormat(res2.data)
+      console.log(this.treeData)
+      this.permFormVisible = true
+    },
     async showEditDialog (id) {
       // console.log(id)
       const { data: res } = await this.$http.get('http://127.0.0.1:9002/sys/role/' + id)
 
       if (res.code !== 10000) return this.$message.error(res.message)
-
+      console.log(res)
       this.editForm = res.data
       this.editDialogVisible = true
     },
@@ -241,6 +291,7 @@ export default {
 .el-table {
   margin-top: 15px;
   font-size: 12px;
+  margin-bottom: 15px;
 }
 
 .toggle-button {
