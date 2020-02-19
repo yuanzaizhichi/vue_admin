@@ -20,9 +20,13 @@
                        @click="getUserList"></el-button>
           </el-input>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="2">
           <el-button type="primary"
                      @click="addDialogVisible = true">添加用户</el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary"
+                     @click="importVisible = true">导入成员</el-button>
         </el-col>
       </el-row>
 
@@ -54,7 +58,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作"
-                         width="180px">
+                         width="200px">
           <template slot-scope="scope">
             <!-- 修改按钮 -->
             <el-button type="text"
@@ -64,6 +68,9 @@
             <el-button type="text"
                        size="mini"
                        @click="setRole(scope.row.id)">分配角色</el-button>
+            <el-button type="text"
+                       size="mini"
+                       @click="userInfoPdf(scope.row.id)">打印</el-button>
             <!-- 删除按钮 -->
             <el-button type="text"
                        size="mini"
@@ -155,6 +162,15 @@
                  :rules="addFormRules"
                  ref="editFormRef"
                  label-width="70px">
+          <el-form-item label-width="100"
+                        label="员工照片">
+            <div>
+              <RegShopImg :imgs='editForm.staffPhoto'
+                          :uid='editForm.id'
+                          ref="staffPhoto"></RegShopImg>
+            </div>
+            <span style="vertical-align: bottom;">图片格式为 JPG/JPEG/PNG/PDF 大小在2MB内</span>
+          </el-form-item>
           <el-form-item label="手机号"
                         prop="mobile">
             <el-input v-model="editForm.mobile"></el-input>
@@ -228,13 +244,28 @@
           <el-button @click="roleFormVisible=false">取消</el-button>
         </div>
       </el-dialog>
+
+      <el-dialog title="导入成员"
+                 :visible.sync="importVisible"
+                 width="26.5%">
+        <component v-bind:is="importCompon"
+                   ref="import"
+                   :baseData='baseData'>
+        </component>
+      </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script>
 import Common from '../../assets/Common'
+import importCompon from './import'
+import RegShopImg from './imgUpload'
 export default {
+  components: {
+    importCompon,
+    RegShopImg
+  },
   data () {
     // 验证手机号的规则
     var checkMobile = (rule, value, cb) => {
@@ -259,6 +290,12 @@ export default {
       cb(new Error('请输入合法的学号'))
     }
     return {
+      baseData: {
+        upUrl: 'http://127.0.0.1:9002/sys/user/import',
+        fileUrl: 'http://127.0.0.1:9002/sys/download'
+      },
+      importCompon: 'importCompon',
+      importVisible: false,
       id: null,
       roleFormVisible: false,
       formBase: {},
@@ -271,7 +308,7 @@ export default {
       // 当前的页数
       page: 1,
       // 当前每页显示多少条数据
-      pagesize: 5,
+      pagesize: 10,
       userlist: [],
       total: 0,
       // 控制添加用户对话框的显示与隐藏
@@ -364,6 +401,9 @@ export default {
       this.$message.success('删除用户成功！')
       this.getUserList()
     },
+    userInfoPdf (id) {
+      location.href = 'http://127.0.0.1:9002/sys/user/' + id + '/pdf'
+    },
     async editUser (id) {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
@@ -382,7 +422,7 @@ export default {
     async showEditDialog (id) {
       const { data: res } = await this.$http.get('http://127.0.0.1:9002/sys/user/' + id)
       if (res.code !== 10000) return this.$message.error(res.message)
-
+      console.log(res)
       this.editForm = res.data
       this.editDialogVisible = true
     },
