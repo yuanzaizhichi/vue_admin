@@ -137,11 +137,12 @@ export default {
       // 左侧菜单数据
       menulist: [],
       iconsObj: {
-        '001': 'iconfont icon-showpassword',
+        '001': 'iconfont icon-baobiao',
         '002': 'iconfont icon-tijikongjian',
         '003': 'iconfont icon-users',
-        '004': 'iconfont icon-danju',
-        '005': 'iconfont icon-user'
+        '004': 'iconfont icon-showpassword',
+        '005': 'iconfont icon-morentouxiang',
+        '006': 'iconfont icon-danju'
       },
       // 是否折叠
       isCollapse: false

@@ -8,6 +8,7 @@ import Admin from '../components/admin/Admin'
 import Users from '../components/user/Users'
 import Params from '../components/param/Params'
 import Roles from '../components/roles/Roles'
+import Activity from '../components/activity/Activity'
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,10 @@ const routes = [
       {
         path: '/roles',
         component: Roles
+      },
+      {
+        path: '/activity',
+        component: Activity
       }
     ]
   }

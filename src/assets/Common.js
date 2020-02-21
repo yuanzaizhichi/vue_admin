@@ -40,6 +40,47 @@ export default {
       id: '9',
       value: '财会系'
     }
+  ],
+  scale: [
+    {
+      id: '0',
+      value: '20人以下'
+    },
+    {
+      id: '1',
+      value: '20~50人'
+    },
+    {
+      id: '2',
+      value: '50~100人'
+    },
+    {
+      id: '3',
+      value: '100~200人'
+    },
+    {
+      id: '4',
+      value: '200人以上'
+    },
+    {
+      id: '5',
+      value: '500人以上'
+    },
+    {
+      id: '6',
+      value: '1000人以上'
+    }
+  ],
+  state: [
+    {
+      id: '0',
+      value: 0,
+      label: '未开展'
+    },
+    {
+      id: '1',
+      value: 1,
+      label: '已开展'
+    }
   ]
-
 }
