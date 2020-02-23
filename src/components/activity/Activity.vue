@@ -10,17 +10,11 @@
     <el-card>
       <!-- 搜索与添加区域 -->
       <el-row :gutter="20">
-        <el-col :span=3>
-          <el-input placeholder="活动名称"
-                    v-model="query"
-                    clearable
-                    @clear="getActList">
-          </el-input>
-        </el-col>
         <el-col :span="3">
           <el-select v-model="scale"
                      clearable
                      @clear="getActList"
+                     @change="getActList"
                      placeholder="活动规模">
             <el-option v-for="item in scaleData"
                        :key="item.id"
@@ -32,6 +26,7 @@
         <el-col :span="3">
           <el-select v-model="type"
                      clearable
+                     @change="getActList"
                      @clear="getActList"
                      placeholder="活动类型">
             <el-option v-for="item in actTypeData"
@@ -44,6 +39,7 @@
         <el-col :span="3">
           <el-select v-model="state"
                      clearable
+                     @change="getActList"
                      @clear="getActList"
                      placeholder="是否开展">
             <el-option v-for="item in stateDate"
@@ -53,14 +49,33 @@
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="2">
-          <el-button type="primary"
-                     icon="el-icon-search"
-                     @click="getActList">搜索</el-button>
+        <el-col :span="3">
+          <el-select v-model="score"
+                     clearable
+                     @change="getActList"
+                     @clear="getActList"
+                     placeholder="评分">
+            <el-option v-for="item in scoreDate"
+                       :key="item.id"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
         </el-col>
         <el-col :span="2">
           <el-button type="primary"
                      @click="addDialogVisible = true">添加活动</el-button>
+        </el-col>
+        <el-col :span="5"
+                :offset="5">
+          <el-input placeholder="活动名称"
+                    v-model="query"
+                    clearable
+                    @clear="getActList">
+            <el-button slot="append"
+                       icon="el-icon-search"
+                       @click="getActList"></el-button>
+          </el-input>
         </el-col>
       </el-row>
 
@@ -270,6 +285,7 @@ export default {
       scale: '',
       type: '',
       state: '',
+      score: '',
       query: '',
       // 当前的页数
       page: 1,
@@ -290,6 +306,7 @@ export default {
       },
       scaleData: Common.scale,
       stateDate: Common.state,
+      scoreDate: Common.score,
       actTypeData: [],
       // 添加表单的验证规则对象
       addFormRules: {
@@ -436,7 +453,7 @@ export default {
       this.getActList()
     },
     async getActList () {
-      const { data: res } = await this.$http.get('http://127.0.0.1:9003/activity?page=' + this.page + '&' + 'pagesize=' + this.pagesize, { params: { query: this.query } }
+      const { data: res } = await this.$http.get('http://127.0.0.1:9003/activity?page=' + this.page + '&' + 'pagesize=' + this.pagesize, { params: { query: this.query, scale: this.scale, type: this.type, state: this.state, score: this.score } }
       )
       if (res.code !== 10000) return this.$message.error(res.message)
       this.actlist = res.data.rows

@@ -10,8 +10,35 @@
     <el-card>
       <!-- 搜索与添加区域 -->
       <el-row :gutter="20">
-        <el-col :span="8">
-          <el-input placeholder="请输入内容"
+        <el-col :span="3">
+          <el-select v-model="selectDep"
+                     clearable
+                     @clear="getUserList"
+                     @change="getUserList"
+                     placeholder="部门划分">
+            <el-option v-for="item in deptData"
+                       :key="item.code"
+                       :label="item.name"
+                       :value="item.name">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary"
+                     @click="addDialogVisible = true">添加用户</el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary"
+                     @click="importVisible = true">批量导入</el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary"
+                     @click="batchDelete"
+                     :disabled="batchDeleteArr.length === 0">批量删除</el-button>
+        </el-col>
+        <el-col :span="5"
+                :offset="10">
+          <el-input placeholder="搜索姓名"
                     v-model="query"
                     clearable
                     @clear="getUserList">
@@ -20,22 +47,16 @@
                        @click="getUserList"></el-button>
           </el-input>
         </el-col>
-        <el-col :span="2">
-          <el-button type="primary"
-                     @click="addDialogVisible = true">添加用户</el-button>
-        </el-col>
-        <el-col :span="2">
-          <el-button type="primary"
-                     @click="importVisible = true">导入成员</el-button>
-        </el-col>
       </el-row>
 
       <!-- 用户列表区域 -->
       <el-table :data="userlist"
+                @selection-change="handleSelectionChange"
                 border
                 stripe>
-        <el-table-column type="index"
-                         label="#"></el-table-column>
+        <el-table-column type="selection"
+                         width="55">
+        </el-table-column>
         <el-table-column label="姓名"
                          prop="username"></el-table-column>
         <el-table-column label="学号"
@@ -290,6 +311,8 @@ export default {
       cb(new Error('请输入合法的学号'))
     }
     return {
+      batchDeleteArr: [],
+      selectDep: '',
       baseData: {
         upUrl: 'http://127.0.0.1:9002/sys/user/import',
         fileUrl: 'http://127.0.0.1:9002/sys/download'
@@ -353,6 +376,44 @@ export default {
     this.loadDepts()
   },
   methods: {
+    async deleteApi (idData) {
+      console.log(idData)
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除用户, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
+
+      // 如果用户确认删除，则返回值为字符串 confirm
+      // 如果用户取消了删除，则返回值为字符串 cancel
+      // console.log(confirmResult)
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已取消删除')
+      }
+
+      const { data: res } = await this.$http.post('http://127.0.0.1:9002/sys/user/del', idData)
+
+      if (res.code !== 10000) return this.$message.error(res.message)
+
+      this.$message.success('删除用户成功！')
+      this.getUserList()
+    },
+    // 批量删除
+    batchDelete () {
+      const deleteData = this.batchDeleteArr.map(item => {
+        const { id } = item
+        return { id }
+      })
+      this.deleteApi(deleteData)
+    },
+    handleSelectionChange (val) {
+      this.batchDeleteArr = val
+    },
     roleDialogClosed () {
       this.id = null
       this.checkedRoles = null
@@ -476,7 +537,7 @@ export default {
       this.getUserList()
     },
     async getUserList () {
-      const { data: res } = await this.$http.get('http://127.0.0.1:9002/sys/user?page=' + this.page + '&' + 'pagesize=' + this.pagesize, { params: { query: this.query } }
+      const { data: res } = await this.$http.get('http://127.0.0.1:9002/sys/user?page=' + this.page + '&' + 'pagesize=' + this.pagesize, { params: { query: this.query, selectDep: this.selectDep } }
       )
       if (res.code !== 10000) return this.$message.error(res.message)
       this.userlist = res.data.rows

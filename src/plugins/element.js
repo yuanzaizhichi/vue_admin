@@ -34,7 +34,9 @@ import {
   DropdownMenu,
   DropdownItem,
   Upload,
-  Rate
+  Rate,
+  Tabs,
+  TabPane
 } from 'element-ui'
 
 Vue.use(Button)
@@ -70,6 +72,8 @@ Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 Vue.use(Upload)
 Vue.use(Rate)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
