@@ -3,7 +3,7 @@
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      <el-breadcrumb-item>成员管理</el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 卡片视图区域 -->
@@ -113,13 +113,13 @@
       <!-- 添加用户的对话框 -->
       <el-dialog title="添加用户"
                  :visible.sync="addDialogVisible"
-                 width="50%"
+                 width="70%"
                  @close="addDialogClosed">
         <!-- 内容主体区域 -->
         <el-form :model="addForm"
                  :rules="addFormRules"
                  ref="addFormRef"
-                 label-width="70px">
+                 label-width="10%">
           <el-form-item label="手机号"
                         prop="mobile">
             <el-input v-model="addForm.mobile"></el-input>
@@ -176,21 +176,20 @@
       <!-- 修改用户的对话框 -->
       <el-dialog title="用户详情"
                  :visible.sync="editDialogVisible"
-                 width="50%"
+                 width="70%"
                  @close="editDialogClosed">
         <!-- 内容主体区域 -->
         <el-form :model="editForm"
                  :rules="addFormRules"
                  ref="editFormRef"
-                 label-width="70px">
-          <el-form-item label-width="100"
-                        label="员工照片">
+                 label-width="10%">
+          <el-form-item label="员工照片">
             <div>
               <RegShopImg :imgs='editForm.staffPhoto'
                           :uid='editForm.id'
                           ref="staffPhoto"></RegShopImg>
             </div>
-            <span style="vertical-align: bottom;">图片格式为 JPG/JPEG/PNG/PDF 大小在2MB内</span>
+            <span style="vertical-align: bottom;color:gray">图片格式为 JPG/JPEG/PNG/PDF 大小在2MB内</span>
           </el-form-item>
           <el-form-item label="手机号"
                         prop="mobile">

@@ -93,7 +93,8 @@
       <el-table-column label="活动地点"
                        prop="place"></el-table-column>
       <el-table-column label="举行时间"
-                       prop="startTime"></el-table-column>
+                       prop="startTime">
+        <template slot-scope="scope">{{ scope.row.startTime | dateFormat }}</template></el-table-column>
       <el-table-column label="社联评分"
                        prop="score">
         <template slot-scope="scope">
@@ -157,7 +158,7 @@
         </el-form-item>
         <el-form-item label="举行时间"
                       prop="startTime">
-          <el-date-picker type="date"
+          <el-date-picker type="datetime"
                           placeholder="选择日期"
                           v-model="detaForm.startTime"
                           style="width: 30%;"></el-date-picker>

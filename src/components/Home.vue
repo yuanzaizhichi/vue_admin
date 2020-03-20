@@ -3,8 +3,6 @@
     <!-- 头部区域 -->
     <el-header>
       <div>
-        <img src="../assets/logo.png"
-             alt="">
         <span>华软社团管理系统</span>
       </div>
       <el-dropdown>

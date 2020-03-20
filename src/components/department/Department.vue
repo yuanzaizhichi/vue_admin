@@ -3,7 +3,7 @@
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>部门列表</el-breadcrumb-item>
+      <el-breadcrumb-item>组织架构</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
       <el-row :gutter="20">
@@ -25,12 +25,9 @@
         <el-table-column prop="code"
                          label="部门编码">
         </el-table-column>
-        <el-table-column prop="category"
-                         label="部门类别">
-        </el-table-column>
-        <el-table-column prop="createTime"
-                         label="创建时间">
-        </el-table-column>
+        <el-table-column label="创建时间"
+                         prop="createTime">
+          <template slot-scope="scope">{{ scope.row.createTime | dateFormat }}</template></el-table-column>
         <el-table-column prop="manager"
                          label="部门负责人">
         </el-table-column>
@@ -52,13 +49,13 @@
 
     <el-dialog title="添加部门"
                :visible.sync="addDialogVisible"
-               width="50%"
+               width="70%"
                @close="addDialogClosed">
       <!-- 内容主体区域 -->
       <el-form :model="addForm"
                :rules="addFormRules"
                ref="addFormRef"
-               label-width="70px">
+               label-width="10%">
         <el-form-item label="部门名称"
                       prop="name">
           <el-input v-model="addForm.name"></el-input>
@@ -91,13 +88,13 @@
 
     <el-dialog title="修改部门"
                :visible.sync="editDialogVisible"
-               width="50%"
+               width="70%"
                @close="editDialogClosed">
       <!-- 内容主体区域 -->
       <el-form :model="editForm"
                :rules="addFormRules"
                ref="editFormRef"
-               label-width="70px">
+               label-width="10%">
         <el-form-item label="部门名称"
                       prop="name">
           <el-input v-model="editForm.name"></el-input>

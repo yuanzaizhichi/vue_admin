@@ -92,7 +92,8 @@
         <el-table-column label="活动规模"
                          prop="scale"></el-table-column>
         <el-table-column label="举行时间"
-                         prop="startTime"></el-table-column>
+                         prop="startTime">
+          <template slot-scope="scope">{{ scope.row.startTime | dateFormat }}</template></el-table-column>
         <el-table-column label="社联评分"
                          prop="score">
           <template slot-scope="scope">
@@ -138,13 +139,13 @@
       <!-- 添加活动的对话框 -->
       <el-dialog title="添加活动"
                  :visible.sync="addDialogVisible"
-                 width="50%"
+                 width="70%"
                  @close="addDialogClosed">
         <!-- 内容主体区域 -->
         <el-form :model="addForm"
                  :rules="addFormRules"
                  ref="addFormRef"
-                 label-width="70px">
+                 label-width="15%">
           <el-form-item label="活动名称"
                         prop="name">
             <el-input v-model="addForm.name"></el-input>
@@ -167,8 +168,9 @@
           </el-form-item>
           <el-form-item label="举行时间"
                         prop="startTime">
-            <el-date-picker type="date"
+            <el-date-picker type="datetime"
                             placeholder="选择日期"
+                            default-time="12:00:00"
                             v-model="addForm.startTime"
                             style="width: 30%;"></el-date-picker>
           </el-form-item>
@@ -202,16 +204,16 @@
         </span>
       </el-dialog>
 
-      <!-- 修改用户的对话框 -->
       <el-dialog title="活动详情"
                  :visible.sync="editDialogVisible"
-                 width="50%"
+                 width="70%"
                  @close="editDialogClosed">
         <!-- 内容主体区域 -->
         <el-form :model="editForm"
                  :rules="addFormRules"
                  ref="editFormRef"
-                 label-width="70px">
+                 :disabled="editForm.state === 1"
+                 label-width="10%">
           <el-form-item label="活动名称"
                         prop="name">
             <el-input v-model="editForm.name"></el-input>
@@ -234,7 +236,7 @@
           </el-form-item>
           <el-form-item label="举行时间"
                         prop="startTime">
-            <el-date-picker type="date"
+            <el-date-picker type="datetime"
                             placeholder="选择日期"
                             v-model="editForm.startTime"
                             style="width: 30%;"></el-date-picker>
@@ -262,10 +264,10 @@
         </el-form>
         <!-- 底部区域 -->
         <span slot="footer"
+              v-if="editForm.state === 0"
               class="dialog-footer">
           <el-button @click="editDialogVisible = false">取 消</el-button>
-          <el-button v-if="editForm.state === 0"
-                     type="primary"
+          <el-button type="primary"
                      @click="editAct(editForm.id)">更 新</el-button>
         </span>
       </el-dialog>

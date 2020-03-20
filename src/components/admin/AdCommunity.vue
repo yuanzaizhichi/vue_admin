@@ -16,8 +16,20 @@
       <el-table-column prop="name"
                        label="组织名称">
       </el-table-column>
+      <el-table-column prop="managerId"
+                       label="组织登录账号ID">
+      </el-table-column>
       <el-table-column prop="principal"
                        label="联系人">
+      </el-table-column>
+      <el-table-column prop="communityPhone"
+                       label="联系电话">
+      </el-table-column>
+      <el-table-column prop="mailbox"
+                       label="邮箱">
+      </el-table-column>
+      <el-table-column prop="typeName"
+                       label="社团类型">
       </el-table-column>
       <el-table-column label="审核状态"
                        prop="state">
@@ -45,13 +57,13 @@
 
     <el-dialog title="添加组织"
                :visible.sync="addDialogVisible"
-               width="50%"
+               width="70%"
                @close="addDialogClosed">
       <!-- 内容主体区域 -->
       <el-form :model="addForm"
                :rules="addFormRules"
                ref="addFormRef"
-               label-width="70px">
+               label-width="15%">
         <el-form-item label="组织名称"
                       prop="name">
           <el-input v-model="addForm.name"></el-input>
@@ -104,13 +116,13 @@
 
     <el-dialog title="组织详情"
                :visible.sync="editDialogVisible"
-               width="50%"
+               width="70%"
                @close="editDialogClosed">
       <!-- 内容主体区域 -->
       <el-form :model="editForm"
                :rules="addFormRules"
                ref="editFormRef"
-               label-width="70px">
+               label-width="15%">
         <el-form-item label="组织名称"
                       prop="name">
           <el-input v-model="editForm.name"></el-input>
@@ -191,6 +203,8 @@ export default {
       cb(new Error('请输入合法的手机号'))
     }
     return {
+      // 社团类型数据
+      comTypeData: [],
       coms: [],
       editDialogVisible: false,
       editForm: {},
@@ -213,13 +227,8 @@ export default {
           { required: true, message: '请输入组织名称', trigger: 'blur' }
         ],
         managerId: [
-          { required: true, message: '请输入组织登录账号ID', trigger: 'blur' },
-          {
-            min: 6,
-            max: 15,
-            message: '部门编号的长度在6~15个字符之间',
-            trigger: 'blur'
-          }
+          { required: true, message: '请输入组织登录账号', trigger: 'blur' },
+          { validator: checkMobile, trigger: 'blur' }
         ],
         communityPhone: [
           { required: true, message: '请输入联系电话', trigger: 'blur' },
@@ -236,6 +245,12 @@ export default {
     }
   },
   methods: {
+    async loadCommunityType () {
+      const { data: res } = await this.$http.get('http://localhost:9001/community/type')
+      if (res.code !== 10000) return this.$message.error(res.message)
+      this.comTypeData = res.data
+      console.log(this.actTypeData)
+    },
     async getComList () {
       const { data: res } = await this.$http.get('http://localhost:9001/community')
       if (res.code !== 10000) return this.$message.error(res.message)

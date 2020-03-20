@@ -3,7 +3,7 @@
     <!-- 面包屑导航区域 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+      <el-breadcrumb-item>角色管理</el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 卡片视图 -->
@@ -54,13 +54,13 @@
       <!-- 添加角色的对话框 -->
       <el-dialog title="添加角色"
                  :visible.sync="addDialogVisible"
-                 width="50%"
+                 width="70%"
                  @close="addDialogClosed">
         <!-- 内容主体区域 -->
         <el-form :model="addForm"
                  :rules="addFormRules"
                  ref="addFormRef"
-                 label-width="70px">
+                 label-width="15%">
           <el-form-item label="角色名称"
                         prop="name">
             <el-input v-model="addForm.name"></el-input>
@@ -82,13 +82,13 @@
       <!-- 修改角色的对话框 -->
       <el-dialog title="修改用户"
                  :visible.sync="editDialogVisible"
-                 width="50%"
+                 width="70%"
                  @close="editDialogClosed">
         <!-- 内容主体区域 -->
         <el-form :model="editForm"
                  :rules="addFormRules"
                  ref="editFormRef"
-                 label-width="70px">
+                 label-width="15%">
           <el-form-item label="角色名称"
                         prop="name">
             <el-input v-model="editForm.name"></el-input>
