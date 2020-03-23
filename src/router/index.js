@@ -9,6 +9,8 @@ import Users from '../components/user/Users'
 import Params from '../components/param/Params'
 import Roles from '../components/roles/Roles'
 import Activity from '../components/activity/Activity'
+import AdminActivity from '../components/adminActivity/AdActivity'
+import AdminUser from '../components/adminUser/AdUser'
 
 Vue.use(VueRouter)
 
@@ -53,6 +55,14 @@ const routes = [
       {
         path: '/activity',
         component: Activity
+      },
+      {
+        path: '/adminactivity',
+        component: AdminActivity
+      },
+      {
+        path: '/adminuser',
+        component: AdminUser
       }
     ]
   }

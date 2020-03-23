@@ -137,10 +137,12 @@ export default {
       iconsObj: {
         '001': 'iconfont icon-baobiao',
         '002': 'iconfont icon-tijikongjian',
-        '003': 'iconfont icon-users',
+        '003': 'iconfont icon-user',
         '004': 'iconfont icon-showpassword',
         '005': 'iconfont icon-morentouxiang',
-        '006': 'iconfont icon-danju'
+        '006': 'iconfont icon-danju',
+        '007': 'iconfont icon-shangpin',
+        '008': 'iconfont icon-users'
       },
       // 是否折叠
       isCollapse: false

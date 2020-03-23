@@ -1,135 +1,142 @@
-    <template>
+<template>
   <div>
-    <!-- 搜索与添加区域 -->
-    <el-row :gutter="20">
-      <el-col :span="3">
-        <el-select v-model="communityId"
-                   clearable
-                   @clear="getActList"
-                   @change="getActList"
-                   placeholder="组织">
-          <el-option v-for="item in commData"
-                     :key="item.id"
-                     :label="item.name"
-                     :value="item.id">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="3">
-        <el-select v-model="scale"
-                   clearable
-                   @clear="getActList"
-                   @change="getActList"
-                   placeholder="活动规模">
-          <el-option v-for="item in scaleData"
-                     :key="item.id"
-                     :label="item.value"
-                     :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="3">
-        <el-select v-model="type"
-                   clearable
-                   @change="getActList"
-                   @clear="getActList"
-                   placeholder="活动类型">
-          <el-option v-for="item in actTypeData"
-                     :key="item.id"
-                     :label="item.type"
-                     :value="item.type">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="3">
-        <el-select v-model="state"
-                   clearable
-                   @change="getActList"
-                   @clear="getActList"
-                   placeholder="是否开展">
-          <el-option v-for="item in stateDate"
-                     :key="item.id"
-                     :label="item.label"
-                     :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="3">
-        <el-select v-model="score"
-                   clearable
-                   @change="getActList"
-                   @clear="getActList"
-                   placeholder="评分">
-          <el-option v-for="item in scoreDate"
-                     :key="item.id"
-                     :label="item.label"
-                     :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="5"
-              :offset="4">
-        <el-input placeholder="活动名称"
-                  v-model="query"
-                  clearable
-                  @clear="getActList">
-          <el-button slot="append"
-                     icon="el-icon-search"
-                     @click="getActList"></el-button>
-        </el-input>
-      </el-col>
-    </el-row>
+    <!-- 面包屑导航区域 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>社联活动管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-card>
+      <!-- 搜索与添加区域 -->
+      <el-row :gutter="20">
+        <el-col :span="3">
+          <el-select v-model="communityId"
+                     clearable
+                     @clear="getActList"
+                     @change="getActList"
+                     placeholder="组织">
+            <el-option v-for="item in commData"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="scale"
+                     clearable
+                     @clear="getActList"
+                     @change="getActList"
+                     placeholder="活动规模">
+            <el-option v-for="item in scaleData"
+                       :key="item.id"
+                       :label="item.value"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="type"
+                     clearable
+                     @change="getActList"
+                     @clear="getActList"
+                     placeholder="活动类型">
+            <el-option v-for="item in actTypeData"
+                       :key="item.id"
+                       :label="item.type"
+                       :value="item.type">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="state"
+                     clearable
+                     @change="getActList"
+                     @clear="getActList"
+                     placeholder="是否开展">
+            <el-option v-for="item in stateDate"
+                       :key="item.id"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="score"
+                     clearable
+                     @change="getActList"
+                     @clear="getActList"
+                     placeholder="评分">
+            <el-option v-for="item in scoreDate"
+                       :key="item.id"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="5"
+                :offset="4">
+          <el-input placeholder="活动名称"
+                    v-model="query"
+                    clearable
+                    @clear="getActList">
+            <el-button slot="append"
+                       icon="el-icon-search"
+                       @click="getActList"></el-button>
+          </el-input>
+        </el-col>
+      </el-row>
 
-    <!-- 用户列表区域 -->
-    <el-table :data="actlist"
-              border
-              stripe>
-      <el-table-column type="index"
-                       label="#"></el-table-column>
-      <el-table-column label="活动名称"
-                       prop="name"></el-table-column>
-      <el-table-column label="组织名称"
-                       prop="communityName"></el-table-column>
-      <el-table-column label="活动地点"
-                       prop="place"></el-table-column>
-      <el-table-column label="举行时间"
-                       prop="startTime">
-        <template slot-scope="scope">{{ scope.row.startTime | dateFormat }}</template></el-table-column>
-      <el-table-column label="社联评分"
-                       prop="score">
-        <template slot-scope="scope">
-          <el-rate v-model="scope.row.score"
-                   v-if="scope.row.state === 1 && scope.row.score !== null"
-                   show-text
-                   disabled
-                   text-color="#ff9900">
-          </el-rate>
-          <span v-else-if="scope.row.state === 0 && scope.row.score === null">活动未结束</span>
-          <span v-else>暂无评分</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <!-- 修改按钮 -->
-          <el-button type="text"
-                     size="mini"
-                     @click="showDetaDialog(scope.row.id)">详情</el-button>
-          <el-button type="text"
-                     size="mini"
-                     @click="showRateDialog(scope.row)">评分</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <!-- 用户列表区域 -->
+      <el-table :data="actlist"
+                border
+                stripe>
+        <el-table-column type="index"
+                         label="#"></el-table-column>
+        <el-table-column label="活动名称"
+                         prop="name"></el-table-column>
+        <el-table-column label="组织名称"
+                         prop="communityName"></el-table-column>
+        <el-table-column label="活动地点"
+                         prop="place"></el-table-column>
+        <el-table-column label="举行时间"
+                         prop="startTime">
+          <template slot-scope="scope">{{ scope.row.startTime | dateFormat }}</template></el-table-column>
+        <el-table-column label="社联评分"
+                         prop="score">
+          <template slot-scope="scope">
+            <el-rate v-model="scope.row.score"
+                     v-if="scope.row.state === 1 && scope.row.score !== null"
+                     show-text
+                     disabled
+                     text-color="#ff9900">
+            </el-rate>
+            <span v-else-if="scope.row.state === 0 && scope.row.score === null">活动未结束</span>
+            <span v-else>暂无评分</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <!-- 修改按钮 -->
+            <el-button type="text"
+                       size="mini"
+                       @click="showDetaDialog(scope.row.id)">详情</el-button>
+            <el-button type="text"
+                       size="mini"
+                       @click="showRateDialog(scope.row)">评分</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <!-- 分页区域 -->
-    <el-pagination @size-change="handleSizeChange"
-                   @current-change="handleCurrentChange"
-                   :current-page="page"
-                   :page-sizes="[1, 2, 5, 10]"
-                   :page-size="pagesize"
-                   layout="total, sizes, prev, pager, next, jumper"
-                   :total="total">
-    </el-pagination>
+      <!-- 分页区域 -->
+      <el-pagination @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="page"
+                     :page-sizes="[1, 2, 5, 10]"
+                     :page-size="pagesize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total">
+      </el-pagination>
+    </el-card>
 
     <el-dialog title="活动详情"
                :visible.sync="detaDialogVisible"

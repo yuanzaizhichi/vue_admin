@@ -1,10 +1,33 @@
 <template>
   <div>
     <el-row :gutter="20">
-      <el-col :span="8"></el-col>
       <el-col :span="4">
+        <el-select v-model="type"
+                   clearable
+                   @clear="getComList"
+                   @change="getComList"
+                   placeholder="所属类型筛选">
+          <el-option v-for="item in comTypeData"
+                     :key="item.id"
+                     :label="item.name"
+                     :value="item.id">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="2">
         <el-button type="primary"
                    @click="addDialogVisible = true">添加组织</el-button>
+      </el-col>
+      <el-col :span="5"
+              :offset="13">
+        <el-input placeholder="组织名称"
+                  v-model="name"
+                  clearable
+                  @clear="getComList">
+          <el-button slot="append"
+                     icon="el-icon-search"
+                     @click="getComList"></el-button>
+        </el-input>
       </el-col>
     </el-row>
     <el-table :data="coms"
@@ -55,6 +78,16 @@
       </el-table-column>
     </el-table>
 
+    <!-- 分页区域 -->
+    <el-pagination @size-change="handleSizeChange"
+                   @current-change="handleCurrentChange"
+                   :current-page="page"
+                   :page-sizes="[1, 2, 5, 10]"
+                   :page-size="pagesize"
+                   layout="total, sizes, prev, pager, next, jumper"
+                   :total="total">
+    </el-pagination>
+
     <el-dialog title="添加组织"
                :visible.sync="addDialogVisible"
                width="70%"
@@ -94,7 +127,13 @@
         </el-form-item>
         <el-form-item label="所属类型"
                       prop="type">
-          <el-input v-model="addForm.type"></el-input>
+          <el-select v-model="addForm.type">
+            <el-option v-for="item in comTypeData"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="联系人"
                       prop="principal">
@@ -153,7 +192,13 @@
         </el-form-item>
         <el-form-item label="所属类型"
                       prop="type">
-          <el-input v-model="editForm.type"></el-input>
+          <el-select v-model="editForm.type">
+            <el-option v-for="item in comTypeData"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="联系人"
                       prop="principal">
@@ -203,6 +248,13 @@ export default {
       cb(new Error('请输入合法的手机号'))
     }
     return {
+      name: '',
+      type: '',
+      // 当前的页数
+      page: 1,
+      // 当前每页显示多少条数据
+      pagesize: 10,
+      total: 0,
       // 社团类型数据
       comTypeData: [],
       coms: [],
@@ -245,16 +297,31 @@ export default {
     }
   },
   methods: {
+    // 监听 pagesize 改变的事件
+    handleSizeChange (newSize) {
+      // console.log(newSize)
+      this.pagesize = newSize
+      this.getComList()
+    },
+    // 监听 页码值 改变的事件
+    handleCurrentChange (newPage) {
+      console.log(newPage)
+      this.page = newPage
+      this.getComList()
+    },
     async loadCommunityType () {
       const { data: res } = await this.$http.get('http://localhost:9001/community/type')
       if (res.code !== 10000) return this.$message.error(res.message)
       this.comTypeData = res.data
-      console.log(this.actTypeData)
+      console.log(this.comTypeData)
     },
     async getComList () {
-      const { data: res } = await this.$http.get('http://localhost:9001/community')
+      const { data: res } = await this.$http.get('http://localhost:9001/community/listpage?page=' + this.page + '&pagesize=' + this.pagesize, { params: { name: this.name, type: this.type } })
+      // , { params: { name: this.name, type: this.type } }
       if (res.code !== 10000) return this.$message.error(res.message)
-      this.coms = res.data
+      console.log(res)
+      this.total = res.data.total
+      this.coms = res.data.row
     },
     addDialogClosed () {
       this.$refs.addFormRef.resetFields()
@@ -332,6 +399,7 @@ export default {
   },
   created: function () {
     this.getComList()
+    this.loadCommunityType()
   }
 }
 </script>

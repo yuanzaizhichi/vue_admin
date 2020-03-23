@@ -5,26 +5,20 @@
                  name="first">
       <AdCommunity></AdCommunity>
     </el-tab-pane>
-    <el-tab-pane label="活动管理"
+    <el-tab-pane label="组织类型"
                  name="second">
-      <AdActivity></AdActivity>
-    </el-tab-pane>
-    <el-tab-pane label="人员管理"
-                 name="third">
-      <AdUser></AdUser>
+      <AdCommunityType></AdCommunityType>
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
 import AdCommunity from './AdCommunity'
-import AdActivity from './AdActivity'
-import AdUser from './AdUser'
+import AdCommunityType from './AdCommunityType'
 export default {
   components: {
     AdCommunity,
-    AdActivity,
-    AdUser
+    AdCommunityType
   },
   data () {
     return {

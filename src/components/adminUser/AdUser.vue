@@ -1,90 +1,97 @@
 <template>
   <div>
-    <!-- 搜索与添加区域 -->
-    <el-row :gutter="20">
-      <el-col :span="3">
-        <el-select v-model="communityId"
-                   clearable
-                   @clear="getUserList"
-                   @change="getUserList"
-                   placeholder="组织划分">
-          <el-option v-for="item in commData"
-                     :key="item.id"
-                     :label="item.name"
-                     :value="item.id">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="primary"
-                   @click="batchDelete"
-                   :disabled="batchDeleteArr.length === 0">批量删除</el-button>
-      </el-col>
-      <el-col :span="5"
-              :offset="14">
-        <el-input placeholder="搜索姓名"
-                  v-model="query"
-                  clearable
-                  @clear="getUserList">
-          <el-button slot="append"
-                     icon="el-icon-search"
-                     @click="getUserList"></el-button>
-        </el-input>
-      </el-col>
-    </el-row>
+    <!-- 面包屑导航区域 -->
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>社联人员管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-card>
+      <!-- 搜索与添加区域 -->
+      <el-row :gutter="20">
+        <el-col :span="3">
+          <el-select v-model="communityId"
+                     clearable
+                     @clear="getUserList"
+                     @change="getUserList"
+                     placeholder="组织划分">
+            <el-option v-for="item in commData"
+                       :key="item.id"
+                       :label="item.name"
+                       :value="item.id">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary"
+                     @click="batchDelete"
+                     :disabled="batchDeleteArr.length === 0">批量删除</el-button>
+        </el-col>
+        <el-col :span="5"
+                :offset="14">
+          <el-input placeholder="搜索姓名"
+                    v-model="query"
+                    clearable
+                    @clear="getUserList">
+            <el-button slot="append"
+                       icon="el-icon-search"
+                       @click="getUserList"></el-button>
+          </el-input>
+        </el-col>
+      </el-row>
 
-    <!-- 用户列表区域 -->
-    <el-table :data="userlist"
-              @selection-change="handleSelectionChange"
-              border
-              stripe>
-      <el-table-column type="selection"
-                       width="55">
-      </el-table-column>
-      <el-table-column label="姓名"
-                       prop="username"></el-table-column>
-      <el-table-column label="学号"
-                       prop="studentId"></el-table-column>
-      <el-table-column label="手机号码"
-                       prop="mobile"></el-table-column>
-      <el-table-column label="部门"
-                       prop="departmentName"></el-table-column>
-      <el-table-column label="审核状态"
-                       prop="state">
-        <template slot-scope="scope">
-          <el-switch v-model="scope.row.enableState"
-                     :active-value=1
-                     :inactive-value=0
-                     active-color="#13ce66"
-                     inactive-color="#ff4949"
-                     @change="userStateChanged(scope.row)">
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作"
-                       width="200px">
-        <template slot-scope="scope">
-          <!-- 修改按钮 -->
-          <el-button type="text"
-                     size="mini"
-                     @click="showEditDialog(scope.row.id)">详情</el-button>
-          <!-- 重设密码按钮 -->
-          <el-button type="text"
-                     size="mini"
-                     @click="reSetPwd(scope.row.id)">密码重置</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <!-- 用户列表区域 -->
+      <el-table :data="userlist"
+                @selection-change="handleSelectionChange"
+                border
+                stripe>
+        <el-table-column type="selection"
+                         width="55">
+        </el-table-column>
+        <el-table-column label="姓名"
+                         prop="username"></el-table-column>
+        <el-table-column label="学号"
+                         prop="studentId"></el-table-column>
+        <el-table-column label="手机号码"
+                         prop="mobile"></el-table-column>
+        <el-table-column label="部门"
+                         prop="departmentName"></el-table-column>
+        <el-table-column label="审核状态"
+                         prop="state">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.enableState"
+                       :active-value=1
+                       :inactive-value=0
+                       active-color="#13ce66"
+                       inactive-color="#ff4949"
+                       @change="userStateChanged(scope.row)">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作"
+                         width="200px">
+          <template slot-scope="scope">
+            <!-- 修改按钮 -->
+            <el-button type="text"
+                       size="mini"
+                       @click="showEditDialog(scope.row.id)">详情</el-button>
+            <!-- 重设密码按钮 -->
+            <el-button type="text"
+                       size="mini"
+                       @click="reSetPwd(scope.row.id)">密码重置</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <!-- 分页区域 -->
-    <el-pagination @size-change="handleSizeChange"
-                   @current-change="handleCurrentChange"
-                   :current-page="page"
-                   :page-sizes="[1, 2, 5, 10]"
-                   :page-size="pagesize"
-                   layout="total, sizes, prev, pager, next, jumper"
-                   :total="total">
-    </el-pagination>
+      <!-- 分页区域 -->
+      <el-pagination @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="page"
+                     :page-sizes="[1, 2, 5, 10]"
+                     :page-size="pagesize"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total">
+      </el-pagination>
+    </el-card>
 
     <!-- 修改用户的对话框 -->
     <el-dialog title="用户详情"
@@ -140,7 +147,6 @@ export default {
   data () {
     return {
       commData: [],
-
       systemData: Common.system,
       editForm: {},
       editDialogVisible: false,
