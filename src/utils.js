@@ -1,3 +1,4 @@
+import store from './store'
 export default {
   transformTozTreeFormat: function(sNodes) {
     var i, l
@@ -25,5 +26,13 @@ export default {
       node.children = newChildren
     }
     return node.children
+  },
+  hasPermissionPoint(point) {
+    const points = store.getters.roles
+    if (points) {
+      return points.some(it => it.toLowerCase() === point.toLowerCase())
+    } else {
+      return false
+    }
   }
 }

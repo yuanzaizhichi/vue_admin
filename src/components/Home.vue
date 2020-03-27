@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import utils from '../utils'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -152,6 +153,9 @@ export default {
     this.getMenuList()
   },
   methods: {
+    show (name) {
+      return utils.hasPermissionPoint(name)
+    },
     pwdDialogClosed () {
       this.$refs.pwdFormRef.resetFields()
     },
@@ -176,6 +180,7 @@ export default {
       if (res.code !== 10000) return this.$message.error(res.message)
       this.menulist = res.data.roles.menus
       this.userInfo = res.data
+      this.$store.dispatch('setUserRoles', res.data.roles.points)
       console.log(res)
     },
     // 点击按钮，切换菜单的折叠与展开

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 
 // 导入全局样式表
 import './assets/css/global.css'
@@ -26,7 +27,7 @@ Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
 
-Vue.filter('dateFormat', function (originVal) {
+Vue.filter('dateFormat', function(originVal) {
   const dt = new Date(originVal)
 
   const y = dt.getFullYear()
@@ -41,6 +42,7 @@ Vue.filter('dateFormat', function (originVal) {
 })
 
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount('#app')
