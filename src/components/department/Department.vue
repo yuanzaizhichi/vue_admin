@@ -10,7 +10,8 @@
         <el-col :span="8"></el-col>
         <el-col :span="4">
           <el-button type="primary"
-                     @click="addDialogVisible = true">添加部门</el-button>
+                     @click="addDialogVisible = true"
+                     v-if="show('POINT-DEP-ADD')">添加部门</el-button>
         </el-col>
       </el-row>
       <el-table :data="depts"
@@ -38,10 +39,12 @@
           <template slot-scope="scope">
             <el-button type="text"
                        size="small"
-                       @click="showEditDialog(scope.row.id)">编辑</el-button>
+                       @click="showEditDialog(scope.row.id)"
+                       v-if="show('POINT-DEP-UPDATE')">编辑</el-button>
             <el-button type="text"
                        size="small"
-                       @click="removeDeptById(scope.row.id)">删除</el-button>
+                       @click="removeDeptById(scope.row.id)"
+                       v-if="show('POINT-DEP-DELETE')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -124,6 +127,7 @@
 </template>
 
 <script>
+import utils from '../../utils'
 export default {
   data () {
     return {
@@ -163,6 +167,9 @@ export default {
     }
   },
   methods: {
+    show (name) {
+      return utils.hasPermissionPoint(name)
+    },
     async getDepList () {
       const { data: res } = await this.$http.get('http://localhost:9001/community/department')
       if (res.code !== 10000) return this.$message.error(res.message)

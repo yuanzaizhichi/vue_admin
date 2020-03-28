@@ -92,7 +92,6 @@
 </template>
 
 <script>
-import utils from '../utils'
 export default {
   data () {
     var validatePass = (rule, value, callback) => {
@@ -153,9 +152,6 @@ export default {
     this.getMenuList()
   },
   methods: {
-    show (name) {
-      return utils.hasPermissionPoint(name)
-    },
     pwdDialogClosed () {
       this.$refs.pwdFormRef.resetFields()
     },

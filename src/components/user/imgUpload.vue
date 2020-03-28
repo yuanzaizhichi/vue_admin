@@ -6,8 +6,8 @@
                :show-file-list="false"
                :before-upload="beforeUpload"
                :on-success="uploadSuccess">
-      <img v-if="imgs"
-           :src="imgs"
+      <img v-if="imgUrl"
+           :src="imgUrl"
            class="avatar"
            ref="imgRef">
       <i v-else
@@ -21,6 +21,7 @@
 export default {
   data: function () {
     return {
+      imgUrl: this.imgs
     }
   },
   props: ['imgs', 'uid'],
@@ -60,7 +61,7 @@ export default {
     },
     uploadSuccess (obj, file) {
       if (obj.code === 10000) {
-        this.$refs.imgRef.src = obj.data
+        this.imgUrl = obj.data
         this.$message.success('上传成功' + '!')
       } else {
         this.$message.error('上传失败' + '!')
@@ -88,6 +89,13 @@ export default {
   height: 178px;
   line-height: 178px;
   text-align: center;
+}
+.el-icon-plus:before {
+  content: '\e6d9';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 .avatar {
   width: 178px;

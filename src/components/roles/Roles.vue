@@ -13,7 +13,8 @@
         </el-col>
         <el-col :span="4">
           <el-button type="primary"
-                     @click="addDialogVisible = true">添加角色</el-button>
+                     @click="addDialogVisible = true"
+                     v-if="show('POINT-ROLE-ADD')">添加角色</el-button>
         </el-col>
       </el-row>
 
@@ -30,13 +31,16 @@
           <template slot-scope="scope">
             <el-button type="text"
                        size="small"
-                       @click="showEditDialog(scope.row.id)">编辑</el-button>
+                       @click="showEditDialog(scope.row.id)"
+                       v-if="show('POINT-ROLE-UPDATE')">编辑</el-button>
             <el-button type="text"
                        size="small"
-                       @click="removeRoleById(scope.row.id)">删除</el-button>
+                       @click="removeRoleById(scope.row.id)"
+                       v-if="show('POINT-ROLE-DELETE')">删除</el-button>
             <el-button type="text"
                        size="small"
-                       @click="handlerPerm(scope.row)">分配权限</el-button>
+                       @click="handlerPerm(scope.row)"
+                       v-if="show('POINT-ROLE-PERM')">分配权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -131,7 +135,7 @@
 </template>
 
 <script>
-import Utils from '../../utils'
+import utils from '../../utils'
 export default {
   data () {
     return {
@@ -166,6 +170,9 @@ export default {
     this.getRolesList()
   },
   methods: {
+    show (name) {
+      return utils.hasPermissionPoint(name)
+    },
     async assignPrem () {
       console.log(this.formData.id)
       console.log(this.$refs.tree.getCheckedKeys())
@@ -188,7 +195,7 @@ export default {
         { params: { type: 0, pid: null, enVisible: 1 } }
       )
       if (res2.code !== 10000) return this.$message.error(res2.message)
-      this.treeData = Utils.transformTozTreeFormat(res2.data)
+      this.treeData = utils.transformTozTreeFormat(res2.data)
       console.log(this.treeData)
       this.permFormVisible = true
     },

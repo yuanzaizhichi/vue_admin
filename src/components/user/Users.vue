@@ -25,16 +25,19 @@
         </el-col>
         <el-col :span="2">
           <el-button type="primary"
-                     @click="addDialogVisible = true">添加用户</el-button>
+                     @click="addDialogVisible = true"
+                     v-if="show('POINT-USER-ADD')">添加用户</el-button>
         </el-col>
         <el-col :span="2">
           <el-button type="primary"
-                     @click="importVisible = true">批量导入</el-button>
+                     @click="importVisible = true"
+                     v-if="show('POINT-USER-IMPORT')">批量导入</el-button>
         </el-col>
         <el-col :span="2">
           <el-button type="primary"
                      @click="batchDelete"
-                     :disabled="batchDeleteArr.length === 0">批量删除</el-button>
+                     :disabled="batchDeleteArr.length === 0"
+                     v-if="show('POINT-USER-DELLIST')">批量删除</el-button>
         </el-col>
         <el-col :span="5"
                 :offset="10">
@@ -88,14 +91,17 @@
             <!-- 分配角色按钮 -->
             <el-button type="text"
                        size="mini"
-                       @click="setRole(scope.row.id)">分配角色</el-button>
+                       @click="setRole(scope.row.id)"
+                       v-if="show('POINT-USER-ROLES')">分配角色</el-button>
             <el-button type="text"
                        size="mini"
-                       @click="userInfoPdf(scope.row.id)">打印</el-button>
+                       @click="userInfoPdf(scope.row.id)"
+                       v-if="show('POINT-USER-PDF')">打印</el-button>
             <!-- 删除按钮 -->
             <el-button type="text"
                        size="mini"
-                       @click="removeUserById(scope.row.id)">删除</el-button>
+                       @click="removeUserById(scope.row.id)"
+                       v-if="show('POINT-USER-DELETE')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -187,7 +193,8 @@
             <div>
               <RegShopImg :imgs='editForm.staffPhoto'
                           :uid='editForm.id'
-                          ref="staffPhoto"></RegShopImg>
+                          ref="staffPhoto"
+                          :key="editForm.id"></RegShopImg>
             </div>
             <span style="vertical-align: bottom;color:gray">图片格式为 JPG/JPEG/PNG/PDF 大小在2MB内</span>
           </el-form-item>
@@ -240,7 +247,8 @@
               class="dialog-footer">
           <el-button @click="editDialogVisible = false">取 消</el-button>
           <el-button type="primary"
-                     @click="editUser(editForm.id)">确 定</el-button>
+                     @click="editUser(editForm.id)"
+                     v-if="show('POINT-USER-UPDATE')">确 定</el-button>
         </span>
       </el-dialog>
 
@@ -281,6 +289,7 @@
 import Common from '../../assets/Common'
 import importCompon from './import'
 import RegShopImg from './imgUpload'
+import utils from '../../utils'
 export default {
   components: {
     importCompon,
@@ -375,6 +384,9 @@ export default {
     this.loadDepts()
   },
   methods: {
+    show (name) {
+      return utils.hasPermissionPoint(name)
+    },
     async deleteApi (idData) {
       console.log(idData)
       // 弹框询问用户是否删除数据

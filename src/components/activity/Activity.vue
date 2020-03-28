@@ -64,7 +64,8 @@
         </el-col>
         <el-col :span="2">
           <el-button type="primary"
-                     @click="addDialogVisible = true">添加活动</el-button>
+                     @click="addDialogVisible = true"
+                     v-if="show('POINT-ACT-ADD')">添加活动</el-button>
         </el-col>
         <el-col :span="5"
                 :offset="5">
@@ -113,12 +114,12 @@
             <el-button type="text"
                        size="mini"
                        @click="showEditDialog(scope.row.id)">详情</el-button>
-            <el-button v-if="scope.row.state === 0"
+            <el-button v-if="scope.row.state === 0 && show('POINT-ACT-END')"
                        type="text"
                        size="mini"
                        @click="endActById(scope.row.id)">结束活动</el-button>
             <!-- 删除按钮 -->
-            <el-button v-if="scope.row.state === 0"
+            <el-button v-if="scope.row.state === 0 && show('POINT-ACT-DELETE')"
                        type="text"
                        size="mini"
                        @click="removeActById(scope.row.id)">删除</el-button>
@@ -268,7 +269,8 @@
               class="dialog-footer">
           <el-button @click="editDialogVisible = false">取 消</el-button>
           <el-button type="primary"
-                     @click="editAct(editForm.id)">更 新</el-button>
+                     @click="editAct(editForm.id)"
+                     v-if="show('POINT-ACT-UPDATE')">更 新</el-button>
         </span>
       </el-dialog>
 
@@ -278,6 +280,7 @@
 
 <script>
 import Common from '../../assets/Common'
+import utils from '../../utils'
 export default {
   data () {
     return {
@@ -338,6 +341,9 @@ export default {
     this.loadActType()
   },
   methods: {
+    show (name) {
+      return utils.hasPermissionPoint(name)
+    },
     async endActById (id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
