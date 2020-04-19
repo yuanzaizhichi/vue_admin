@@ -130,7 +130,7 @@ export default {
         pass: '',
         checkPass: ''
       },
-      pwdDialogVisible: false,
+      pwdDialogVisible: this.$route.query.pwdDialogVisible,
       userInfo: {},
       // 左侧菜单数据
       menulist: [],

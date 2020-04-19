@@ -15,13 +15,28 @@
         <!-- 用户名 -->
         <el-form-item prop="mobile">
           <el-input v-model="loginForm.mobile"
-                    prefix-icon="iconfont icon-user"></el-input>
+                    prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
           <el-input v-model="loginForm.password"
-                    prefix-icon="iconfont icon-3702mima"
+                    prefix-icon="el-icon-lock"
                     type="password"></el-input>
+        </el-form-item>
+        <!-- 验证码 -->
+        <el-form-item prop="captcha">
+          <el-input v-model="loginForm.captcha"
+                    prefix-icon="el-icon-key">
+            <template slot="append">
+              <img alt="验证码"
+                   @click="refreshCode"
+                   :src="captchaImg"
+                   title="点击更换"
+                   ref="captchaImg"
+                   id="captcha_img" />
+            </template>
+          </el-input>
+
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="btns">
@@ -39,10 +54,12 @@
 export default {
   data () {
     return {
+      captchaImg: 'http://127.0.0.1:9002/sys/getCaptcha',
       // 这是登录表单的数据绑定对象
       loginForm: {
         mobile: '15602267394',
-        password: '123456'
+        password: '123456',
+        captcha: ''
       },
       // 这是表单的验证规则对象
       loginFormRules: {
@@ -55,11 +72,19 @@ export default {
         password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
           { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ],
+        // 验证码是否合法
+        captcha: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { min: 4, max: 4, message: '验证码长度在4个字符', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
+    refreshCode () {
+      this.captchaImg = 'http://127.0.0.1:9002/sys/getCaptcha?' + Math.ceil(Math.random() * 10)
+    },
     // 点击重置按钮，重置登录表单
     resetLoginForm () {
       // console.log(this);
@@ -69,14 +94,15 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
         const { data: res } = await this.$http.post('http://127.0.0.1:9002/sys/login', this.loginForm)
-        if (res.code !== 10000) return this.$message.error(res.message)
-        this.$message.success('登录成功')
+        if (res.success !== true) return this.$message.error(res.message)
+        this.$message.success(res.message)
         // 1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中
         //   1.1 项目中出了登录之外的其他API接口，必须在登录之后才能访问
         //   1.2 token 只应在当前网站打开期间生效，所以将 token 保存在 sessionStorage 中
         window.sessionStorage.setItem('token', res.data)
         // 2. 通过编程式导航跳转到后台主页，路由地址是 /home
-        this.$router.push('/home')
+        if (res.code === 20007) this.$router.push({ path: '/home', query: { pwdDialogVisible: false } })
+        else this.$router.push({ path: '/home', query: { pwdDialogVisible: true } })
       })
     }
   }
@@ -91,7 +117,7 @@ export default {
 
 .login_box {
   width: 450px;
-  height: 300px;
+  height: 350px;
   background-color: #fff;
   border-radius: 3px;
   position: absolute;
@@ -123,7 +149,7 @@ export default {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 50px;
   box-sizing: border-box;
 }
 
